@@ -193,7 +193,7 @@ if (temperature > 30.0) {
                 <pre class="bg-black p-4 rounded text-sm text-green-400 mb-4">
 // Function Declaration
 void blinkLed(int times) {
-    for(int i=0; i<times; i++) {
+    for(int i = 0; i < times; i++) {
         digitalWrite(LED_PIN, HIGH);
         delay(100);
         digitalWrite(LED_PIN, LOW);

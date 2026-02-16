@@ -68,6 +68,19 @@ window.spacePointData.categories.push({
                         <li><strong>Wires:</strong> Uses only 2 wires to connect many things!</li>
                     </ul>
                 </div>
+
+                <!-- Interactive Lab -->
+                <div id="i2c-activity-container" class="mt-8">
+                    <button onclick="Activities.renderI2CBuilder('i2c-activity-container')" class="w-full py-4 bg-gradient-to-r from-purple-800 to-indigo-900 rounded-xl border border-purple-500/50 hover:border-purple-400 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all group">
+                        <div class="flex flex-col items-center gap-2">
+                             <div class="p-3 rounded-full bg-black/40 group-hover:bg-purple-500/20 transition-colors">
+                                <i data-lucide="flask-conical" class="w-8 h-8 text-purple-300 group-hover:text-white"></i>
+                             </div>
+                             <span class="font-bold text-white text-lg">Open I2C Lab</span>
+                             <span class="text-purple-300 text-sm">Tap to build your own network</span>
+                        </div>
+                    </button>
+                </div>
             ` 
         },
         { 

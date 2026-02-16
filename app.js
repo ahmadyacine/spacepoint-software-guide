@@ -309,6 +309,13 @@ const App = {
                          <h3 class="font-bold">${isCompleted ? 'Lesson Complete!' : 'In Progress'}</h3>
                          <p class="text-xs text-gray-400 mt-1">Keep up the momentum.</p>
                     </div>
+                    <div class="mt-8 pt-4 border-t border-purple-500/20">
+                        <a href="https://gemini.google.com/gem/1Dg1zYUXIEqhK_kNsciCDQz2bYkleyUdW?usp=sharing" target="_blank" 
+                           class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-200 hover:from-blue-600/40 hover:to-purple-600/40 transition-all border border-blue-500/30 hover:border-blue-400 group">
+                            <i data-lucide="sparkles" class="w-5 h-5 text-blue-400 group-hover:text-white transition-colors"></i>
+                            <span class="font-bold text-sm">Ask SpacePoint AI</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         `;
