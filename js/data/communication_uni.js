@@ -3,6 +3,7 @@
  * data/communication.js - Communication Interfaces
  */
 
+if (window.getUserType() !== 'school') {
 window.spacePointData.categories.push({
     id: 'comms',
     title: 'Communication Interfaces',
@@ -116,3 +117,4 @@ window.spacePointData.categories.push({
         }
     ]
 });
+}

@@ -23,6 +23,8 @@ const App = {
             console.error("Critical: spacePointData not found!");
         }
 
+        if (!this.checkOnboarding()) return; // Stop if onboarding needed
+
         this.updateSidebar();
         this.handleRoute();
         window.addEventListener('hashchange', () => this.handleRoute());
@@ -235,11 +237,27 @@ const App = {
                     ${lesson.hasPractice ? this.renderPracticeWidget(lesson.id, practiceData, attempts, isCompleted) : ''}
                     
                     <!-- Navigation Buttons -->
-                     <button onclick="App.markComplete('${lesson.id}')" 
-                            class="w-full py-4 mt-8 rounded-xl font-bold flex items-center justify-center gap-2 transition-all
-                            ${isCompleted ? 'bg-green-600/20 text-green-400 border border-green-500/50 cursor-default' : 'bg-purple-600 hover:bg-purple-700 text-white shadow-lg shadow-purple-900/40'}">
-                        ${isCompleted ? '<i data-lucide="check"></i> Completed' : 'Mark as Complete'}
-                    </button>
+                    ${(() => {
+                        const practiceCompleted = !lesson.hasPractice || localStorage.getItem(`sp_practice_completed_${lesson.id}`) === 'true';
+                        const isLocked = !isCompleted && !practiceCompleted;
+                        
+                        return `
+                        <button onclick="App.markComplete('${lesson.id}')" 
+                                ${isLocked ? 'disabled' : ''}
+                                class="w-full py-4 mt-8 rounded-xl font-bold flex items-center justify-center gap-2 transition-all
+                                ${isCompleted 
+                                    ? 'bg-green-600/20 text-green-400 border border-green-500/50 cursor-default' 
+                                    : isLocked
+                                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700'
+                                        : 'bg-purple-600 hover:bg-purple-700 text-white shadow-lg shadow-purple-900/40'}">
+                            ${isCompleted 
+                                ? '<i data-lucide="check"></i> Completed' 
+                                : isLocked
+                                    ? '<i data-lucide="lock"></i> Complete Quiz to Unlock'
+                                    : 'Mark as Complete'}
+                        </button>
+                        `;
+                    })()}
 
                     ${isCompleted ? (() => {
                         const currentIndex = category.lessons.findIndex(l => l.id === lesson.id);
@@ -396,23 +414,21 @@ const App = {
     },
 
     checkPractice(lessonId) {
-        // Increment attempts
+        // 1. SELECT INPUTS FIRST (Before touching DOM)
+        const inputs = document.querySelectorAll('.code-input');
+        const feedback = document.getElementById('practice-feedback');
+        
+        // 2. Increment attempts
         let attempts = this.getAttempts(lessonId) + 1;
         localStorage.setItem(`sp_attempts_${lessonId}`, attempts);
         
-        // Reload widget UI to show attempts count or auto-fill
-        const currentLesson = this.state.categories.flatMap(c => c.lessons).find(l => l.id === lessonId);
-        const currentCat = this.state.categories.find(c => c.lessons.some(l => l.id === lessonId));
-        const isCompleted = this.isLessonComplete(lessonId);
-        const practiceData = window.practiceTemplates[currentLesson.practiceType]; // Get from global
+        // Update attempts UI directly without re-rendering everything (preserves inputs)
+        const attemptsEl = document.getElementById('attempts-count');
+        if(attemptsEl) attemptsEl.textContent = attempts;
 
-        // Render just to update the UI count (lazy way, better would be to just update DOM)
-        // But we need to update the whole widget if it unlocks
-        this.renderLesson(document.getElementById('content-area'), currentCat, currentLesson);
-        
-        // We need to re-select elements because we just re-rendered
-        const feedback = document.getElementById('practice-feedback');
-        const inputs = document.querySelectorAll('.code-input');
+        // 3. Validate
+        const currentLesson = this.state.categories.flatMap(c => c.lessons).find(l => l.id === lessonId);
+        const practiceData = window.practiceTemplates[currentLesson.practiceType];
         
         let allCorrect = true;
         
@@ -434,18 +450,36 @@ const App = {
             }
         });
 
+        // 4. Force re-render ONLY if we hit the attempt limit (to show unlocked state)
+        // AND we are not already correct.
+        if (attempts >= 3 && !allCorrect) {
+             const currentCat = this.state.categories.find(c => c.lessons.some(l => l.id === lessonId));
+             this.renderLesson(document.getElementById('content-area'), currentCat, currentLesson);
+             return; // Stop here, user gets the "Unlocked" view
+        }
+
         feedback.classList.remove('hidden');
+        
         if (allCorrect) {
+            // Save practice completion state
+            localStorage.setItem(`sp_practice_completed_${lessonId}`, 'true');
+            
             feedback.innerHTML = `
                 <div class="p-3 bg-green-900/30 border border-green-500/50 rounded text-green-300 flex items-center gap-2">
                     <i data-lucide="check-circle" class="w-5 h-5"></i>
                     <div>
                         <strong>Success!</strong> Code logic is correct.
-                        <p class="text-xs opacity-80 mt-1">Don't forget to click "Mark as Complete" below.</p>
+                        <p class="text-xs opacity-80 mt-1">Lesson unlocked! You can now mark it as complete.</p>
                     </div>
                 </div>
             `;
-            // Optional: Auto-mark complete or just let user click
+            
+            // Re-render to unlock the button (delayed slightly for UX)
+            setTimeout(() => {
+                const currentCat = this.state.categories.find(c => c.lessons.some(l => l.id === lessonId));
+                this.renderLesson(document.getElementById('content-area'), currentCat, currentLesson);
+            }, 1000);
+            
         } else {
              // Show hints if available
             const hint = practiceData.hints ? practiceData.hints[Math.floor(Math.random() * practiceData.hints.length)] : "Check your syntax.";
@@ -455,7 +489,7 @@ const App = {
                     <i data-lucide="alert-circle" class="w-5 h-5"></i>
                     <div>
                         <strong>Keep trying!</strong> ${hint}
-                        ${attempts >= 3 ? '<p class="text-xs mt-1 text-yellow-200">Tip: Refreshing/Re-checking will now auto-fill the answer.</p>' : ''}
+                        ${attempts >= 3 ? '<p class="text-xs mt-1 text-yellow-200">Tip: Refreshing the page will now auto-fill the answer.</p>' : ''}
                     </div>
                 </div>
             `;
@@ -487,7 +521,94 @@ const App = {
 
     updateGlobalProgress() {
         // can be used to unlock other features
+    },
+
+    // ============================================
+    // ONBOARDING
+    // ============================================
+
+    checkOnboarding() {
+        const user = localStorage.getItem('spacePointUser');
+        if (!user) {
+            this.renderOnboardingModal();
+            return false;
+        }
+        return true;
+    },
+
+    renderOnboardingModal() {
+        const modalHtml = `
+            <div id="onboarding-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in">
+                <div class="bg-[#2B0A3D] border border-purple-500/30 rounded-2xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden">
+                    <!-- Background decoration -->
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+                    
+                    <div class="relative z-10 text-center">
+                        <div class="inline-flex p-3 rounded-full bg-purple-500/20 text-purple-300 mb-4">
+                            <i data-lucide="rocket" class="w-8 h-8"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-2">Welcome to SpacePoint!</h2>
+                        <p class="text-gray-400 text-sm mb-6">Let's set up your profile to personalize your learning experience.</p>
+                        
+                        <form onsubmit="event.preventDefault(); App.saveOnboarding(this);" class="space-y-4 text-left">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Your Name</label>
+                                <input type="text" name="name" required class="w-full bg-black/30 border border-purple-500/30 rounded-lg px-4 py-2 text-white focus:border-purple-500 focus:outline-none placeholder-gray-600" placeholder="Astronaut Name">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Age</label>
+                                <input type="number" name="age" required min="5" max="99" class="w-full bg-black/30 border border-purple-500/30 rounded-lg px-4 py-2 text-white focus:border-purple-500 focus:outline-none placeholder-gray-600" placeholder="Years">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-400 uppercase mb-3">I am a...</label>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <label class="cursor-pointer group">
+                                        <input type="radio" name="type" value="school" required class="peer hidden">
+                                        <div class="h-full p-4 rounded-xl border border-purple-500/20 bg-black/20 peer-checked:bg-purple-600 peer-checked:border-purple-500 transition-all hover:bg-white/5 flex flex-col items-center gap-2">
+                                            <i data-lucide="backpack" class="w-6 h-6 text-gray-400 group-hover:text-white peer-checked:text-white"></i>
+                                            <span class="text-xs font-bold text-gray-300 peer-checked:text-white">School Student</span>
+                                        </div>
+                                    </label>
+
+                                    <label class="cursor-pointer group">
+                                        <input type="radio" name="type" value="uni" required class="peer hidden">
+                                        <div class="h-full p-4 rounded-xl border border-purple-500/20 bg-black/20 peer-checked:bg-purple-600 peer-checked:border-purple-500 transition-all hover:bg-white/5 flex flex-col items-center gap-2">
+                                            <i data-lucide="graduation-cap" class="w-6 h-6 text-gray-400 group-hover:text-white peer-checked:text-white"></i>
+                                            <span class="text-xs font-bold text-gray-300 peer-checked:text-white">Uni Student</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-lg shadow-lg shadow-purple-900/50 hover:from-purple-500 hover:to-pink-500 transition-all mt-4 transform hover:scale-[1.02]">
+                                Start Mission 🚀
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        lucide.createIcons();
+    },
+
+    saveOnboarding(form) {
+        const formData = new FormData(form);
+        const userData = {
+            name: formData.get('name'),
+            age: formData.get('age'),
+            type: formData.get('type'),
+            joined: new Date().toISOString()
+        };
+
+        localStorage.setItem('spacePointUser', JSON.stringify(userData));
+        
+        // Reload to apply content filtering based on user type
+        window.location.reload();
     }
+
 };
 
 window.App = App; // Make accessible to inline onclick handlers

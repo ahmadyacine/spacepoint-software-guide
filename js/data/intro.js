@@ -19,11 +19,38 @@ window.spacePointData.categories.push({
                 <h3 class="text-xl font-bold mb-2">Getting Started</h3>
                 <p class="mb-4">The Arduino IDE is the primary tool we use to write and upload code to our ESP32 microcontrollers.</p>
                 
+                <h4 class="font-bold text-purple-300 mb-4">Select your Operating System:</h4>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <!-- Windows Card -->
+                    <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col items-center hover:border-blue-500 transition-colors">
+                        <div class="text-4xl mb-2">🪟</div>
+                        <h5 class="font-bold text-white mb-1">Windows</h5>
+                        <p class="text-xs text-gray-400 mb-4">HP, DELL, Lenovo, etc.</p>
+                        <a href="https://www.arduino.cc/en/software" target="_blank" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded text-sm w-full text-center">Download for Windows</a>
+                    </div>
+
+                    <!-- macOS Card -->
+                    <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col items-center hover:border-gray-400 transition-colors">
+                        <div class="text-4xl mb-2">🍎</div>
+                        <h5 class="font-bold text-white mb-1">macOS</h5>
+                        <p class="text-xs text-gray-400 mb-4">Apple MacBook, iMac, etc.</p>
+                        <a href="https://www.arduino.cc/en/software" target="_blank" class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded text-sm w-full text-center">Download for macOS</a>
+                    </div>
+
+                    <!-- Linux Card -->
+                    <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col items-center hover:border-yellow-500 transition-colors">
+                        <div class="text-4xl mb-2">🐧</div>
+                        <h5 class="font-bold text-white mb-1">Linux</h5>
+                        <p class="text-xs text-gray-400 mb-4">Ubuntu, Debian, Fedora, etc.</p>
+                        <a href="https://www.arduino.cc/en/software" target="_blank" class="bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded text-sm w-full text-center">Download for Linux</a>
+                    </div>
+                </div>
+                
                 <div class="bg-purple-900/30 p-4 rounded-lg border border-purple-500/30 mb-6">
                     <h4 class="font-bold text-purple-300 mb-2">Installation Steps:</h4>
                     <ol class="list-decimal list-inside space-y-2 text-gray-300">
-                        <li>Go to the <a href="https://www.arduino.cc/en/software" target="_blank" class="text-pink-400 underline">Arduino Software page</a>.</li>
-                        <li>Download the version for your OS (Windows, macOS, or Linux).</li>
+                        <li>Click the download button for your OS above.</li>
                         <li>Run the installer and follow the prompts.</li>
                         <li>Launch Arduino IDE.</li>
                     </ol>
@@ -91,6 +118,8 @@ window.spacePointData.categories.push({
             id: 'variables',
             title: 'Variables',
             time: '10 min',
+            hasPractice: true,
+            practiceType: 'intro_variables',
             content: `
                 <h3 class="text-xl font-bold mb-2">Using Variables</h3>
                 <p class="mb-4">Variables store data. In SpacePoint software, meaningful names are mandatory.</p>
@@ -111,6 +140,8 @@ bool performCalibration = false;</pre>
             id: 'loops',
             title: 'Loops',
             time: '20 min',
+            hasPractice: true,
+            practiceType: 'intro_loops',
             content: `
                 <h3 class="text-xl font-bold mb-2">Control Flow: Loops</h3>
                 <p class="mb-4">Loops repeat code. The two most common are <strong>for</strong> and <strong>while</strong>.</p>
@@ -134,6 +165,8 @@ while (WiFi.status() != WL_CONNECTED) {
             id: 'if-statements',
             title: 'If statements',
             time: '15 min',
+            hasPractice: true,
+            practiceType: 'intro_if',
             content: `
                 <h3 class="text-xl font-bold mb-2">Decision Making</h3>
                 <p class="mb-4"><code>if</code> statements allow your satellite software to react to sensor data.</p>
@@ -152,6 +185,8 @@ if (temperature > 30.0) {
             id: 'functions',
             title: 'Functions',
             time: '25 min',
+            hasPractice: true,
+            practiceType: 'intro_functions',
             content: `
                 <h3 class="text-xl font-bold mb-2">Modular Code</h3>
                 <p class="mb-4">Functions group code into reusable blocks. This keeps <code>loop()</code> clean.</p>

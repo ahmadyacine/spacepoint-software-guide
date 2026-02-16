@@ -4,6 +4,131 @@
  */
 
 window.practiceTemplates = {
+    // --- Intro Level Quizzes ---
+    'intro_variables': {
+        title: 'Variable Declaration',
+        instructions: 'Declare the variables below with the correct types (int, float, bool, char) and assignments.',
+        hasAddressSelector: false,
+        template: `
+void setup() {
+  Serial.begin(115200);
+
+  // 1. Declare an integer named 'count' with value 10
+  {{INT_VAR}} count = {{INT_VAL}};
+
+  // 2. Declare a float named 'voltage' with value 3.3
+  {{FLOAT_VAR}} voltage = {{FLOAT_VAL}};
+
+  // 3. Declare a boolean named 'isActive' with value true
+  {{BOOL_VAR}} isActive = {{BOOL_VAL}};
+
+  Serial.println("Variables initialized!");
+}
+`,
+        answers: {
+            // Permissive: match keyword/value anywhere, ignore case/symbols
+            '{{INT_VAR}}': (val) => /int/i.test(val),
+            '{{INT_VAL}}': (val) => val.includes('10'),
+            '{{FLOAT_VAR}}': (val) => /float/i.test(val),
+            '{{FLOAT_VAL}}': (val) => val.includes('3.3'),
+            '{{BOOL_VAR}}': (val) => /bool/i.test(val),
+            '{{BOOL_VAL}}': (val) => /true|1/i.test(val)
+        },
+        correctAnswers: {
+             '{{INT_VAR}}': 'int',
+             '{{INT_VAL}}': '10',
+             '{{FLOAT_VAR}}': 'float',
+             '{{FLOAT_VAL}}': '3.3',
+             '{{BOOL_VAR}}': 'bool',
+             '{{BOOL_VAL}}': 'true'
+        },
+        hints: ["Integers use 'int'.", "Decimals use 'float'.", "True/False uses 'bool'."]
+    },
+
+    'intro_loops': {
+        title: 'For Loop Practice',
+        instructions: 'Write a for loop that counts from 0 to 9 (10 iterations).',
+        hasAddressSelector: false,
+        template: `
+void setup() {
+  Serial.begin(115200);
+
+  // Loop from i = 0 to i < 10
+  for (int i = 0; i < {{LIMIT}}; {{INCREMENT}}) {
+    Serial.println(i);
+  }
+}
+`,
+        answers: {
+            // Allows '10', '10;', ' 10 ', etc.
+            '{{LIMIT}}': (val) => val.includes('10'),
+            // Allows 'i++', '++i', 'i+=1', 'i = i + 1'
+            '{{INCREMENT}}': (val) => {
+                const norm = val.replace(/\s/g, '');
+                return norm.includes('i++') || norm.includes('++i') || norm.includes('i+=1') || norm.includes('i=i+1');
+            }
+        },
+        correctAnswers: {
+             '{{LIMIT}}': '10',
+             '{{INCREMENT}}': 'i++'
+        },
+        hints: ["The condition should be i < 10.", "Increment i by 1 using i++."]
+    },
+
+    'intro_if': {
+        title: 'If-Else Logic',
+        instructions: 'Complete the logic to check if temperature is above 30 degrees.',
+        hasAddressSelector: false,
+        template: `
+void checkTemp(float temp) {
+  // Check if temp is greater than 30
+  if (temp {{OPERATOR}} 30.0) {
+    Serial.println("Too Hot!");
+  } {{ELSE_KEY}} {
+    Serial.println("Normal");
+  }
+}
+`,
+        answers: {
+            '{{OPERATOR}}': (val) => val.includes('>'),
+            '{{ELSE_KEY}}': (val) => /else/i.test(val)
+        },
+        correctAnswers: {
+             '{{OPERATOR}}': '>',
+             '{{ELSE_KEY}}': 'else'
+        },
+        hints: ["Greater than symbol is >.", "The opposite block is 'else'."]
+    },
+
+    'intro_functions': {
+        title: 'Writing a Function',
+        instructions: 'Create a function named blinkLED that takes one integer argument named "delayTime".',
+        hasAddressSelector: false,
+        template: `
+// Define the function
+void {{FUNC_NAME}}(int {{ARG_NAME}}) {
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay({{ARG_NAME}});
+  digitalWrite(LED_BUILTIN, LOW);
+  delay({{ARG_NAME}});
+}
+
+void loop() {
+  blinkLED(1000);
+}
+`,
+        answers: {
+            '{{FUNC_NAME}}': (val) => val.trim() === 'blinkLED',
+            '{{ARG_NAME}}': (val) => val.trim() === 'delayTime'
+        },
+        correctAnswers: {
+             '{{FUNC_NAME}}': 'blinkLED',
+             '{{ARG_NAME}}': 'delayTime'
+        },
+        hints: ["Function name must match the call in loop().", "Argument name must match the usage directly inside."]
+    },
+
+    // --- Advanced Hardware Quizzes ---
     'temp_i2c': {
         title: 'Read TMP102 Temperature',
         instructions: 'Complete the code to initialize I2C and read temperature from the SpacePoint TMP102 (Address 0x49).',
