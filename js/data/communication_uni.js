@@ -35,6 +35,19 @@ window.spacePointData.categories.push({
                         <li><strong>Error Checking:</strong> CAN has built-in CRC checking and error confinement. Faulty nodes automatically switch off to prevent jamming the bus.</li>
                     </ul>
                 </div>
+
+                <!-- Interactive Lab -->
+                <div id="can-activity-container" class="mt-8">
+                    <button onclick="Activities.renderCANLab('can-activity-container')" class="w-full py-4 bg-gradient-to-r from-red-800 to-orange-900 rounded-xl border border-red-500/50 hover:border-red-400 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)] transition-all group">
+                        <div class="flex flex-col items-center gap-2">
+                             <div class="p-3 rounded-full bg-black/40 group-hover:bg-red-500/20 transition-colors">
+                                <i data-lucide="network" class="w-8 h-8 text-red-300 group-hover:text-white"></i>
+                             </div>
+                             <span class="font-bold text-white text-lg">Open CAN Lab</span>
+                             <span class="text-red-300 text-sm">Visualize the Bus Broadcast</span>
+                        </div>
+                    </button>
+                </div>
             ` 
         },
         { 
@@ -58,6 +71,19 @@ window.spacePointData.categories.push({
                         <li><strong>Data Frame:</strong> Data is sent in packets, usually starting with a Start Bit (low), followed by 5-9 data bits (usually 8), a Parity Bit (optional), and 1 or 2 Stop Bits (high).</li>
                         <li><strong>Usage:</strong> Commonly used for debugging (printing to Serial Monitor), GPS modules, and Bluetooth modules.</li>
                     </ul>
+                </div>
+
+                <!-- Interactive Lab -->
+                <div id="uart-activity-container" class="mt-8">
+                    <button onclick="Activities.renderUARTLab('uart-activity-container')" class="w-full py-4 bg-gradient-to-r from-teal-800 to-emerald-900 rounded-xl border border-teal-500/50 hover:border-teal-400 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)] transition-all group">
+                        <div class="flex flex-col items-center gap-2">
+                             <div class="p-3 rounded-full bg-black/40 group-hover:bg-teal-500/20 transition-colors">
+                                <i data-lucide="cable" class="w-8 h-8 text-teal-300 group-hover:text-white"></i>
+                             </div>
+                             <span class="font-bold text-white text-lg">Open UART Lab</span>
+                             <span class="text-teal-300 text-sm">Wire up TX/RX</span>
+                        </div>
+                    </button>
                 </div>
             ` 
         },
@@ -88,6 +114,19 @@ window.spacePointData.categories.push({
                         <li><strong>Speeds:</strong> Standard Mode (100 kbps), Fast Mode (400 kbps), and High Speed Mode (3.4 Mbps).</li>
                     </ul>
                 </div>
+
+                <!-- Interactive Lab -->
+                <div id="i2c-activity-container" class="mt-8">
+                    <button onclick="Activities.renderI2CBuilder('i2c-activity-container')" class="w-full py-4 bg-gradient-to-r from-purple-800 to-indigo-900 rounded-xl border border-purple-500/50 hover:border-purple-400 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all group">
+                        <div class="flex flex-col items-center gap-2">
+                             <div class="p-3 rounded-full bg-black/40 group-hover:bg-purple-500/20 transition-colors">
+                                <i data-lucide="flask-conical" class="w-8 h-8 text-purple-300 group-hover:text-white"></i>
+                             </div>
+                             <span class="font-bold text-white text-lg">Open I2C Lab</span>
+                             <span class="text-purple-300 text-sm">Build the Master-Slave Network</span>
+                        </div>
+                    </button>
+                </div>
             ` 
         },
         { 
@@ -112,6 +151,19 @@ window.spacePointData.categories.push({
                         <li><strong>MISO (Master In Slave Out):</strong> Data sent from Slave to Master.</li>
                         <li><strong>CS/SS (Chip Select / Slave Select):</strong> A separate line for each slave device. The Master pulls this line LOW to activate a specific slave. This differs from I2C, which uses addresses.</li>
                     </ul>
+                </div>
+
+                <!-- Interactive Lab -->
+                <div id="spi-activity-container" class="mt-8">
+                    <button onclick="Activities.renderSPILab('spi-activity-container')" class="w-full py-4 bg-gradient-to-r from-indigo-800 to-blue-900 rounded-xl border border-indigo-500/50 hover:border-indigo-400 hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] transition-all group">
+                        <div class="flex flex-col items-center gap-2">
+                             <div class="p-3 rounded-full bg-black/40 group-hover:bg-indigo-500/20 transition-colors">
+                                <i data-lucide="activity" class="w-8 h-8 text-indigo-300 group-hover:text-white"></i>
+                             </div>
+                             <span class="font-bold text-white text-lg">Open SPI Lab</span>
+                             <span class="text-indigo-300 text-sm">Experiment with Chip Select</span>
+                        </div>
+                    </button>
                 </div>
             ` 
         }

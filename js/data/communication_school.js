@@ -30,6 +30,19 @@ window.spacePointData.categories.push({
                         <li><strong>Safe:</strong> It uses two wires to make sure the message doesn't get messed up by noise.</li>
                     </ul>
                 </div>
+
+                <!-- Interactive Lab -->
+                <div id="can-activity-container" class="mt-8">
+                    <button onclick="Activities.renderCANLab('can-activity-container')" class="w-full py-4 bg-gradient-to-r from-red-800 to-orange-900 rounded-xl border border-red-500/50 hover:border-red-400 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)] transition-all group">
+                        <div class="flex flex-col items-center gap-2">
+                             <div class="p-3 rounded-full bg-black/40 group-hover:bg-red-500/20 transition-colors">
+                                <i data-lucide="network" class="w-8 h-8 text-red-300 group-hover:text-white"></i>
+                             </div>
+                             <span class="font-bold text-white text-lg">Open CAN Lab</span>
+                             <span class="text-red-300 text-sm">Tap to join the group chat</span>
+                        </div>
+                    </button>
+                </div>
             ` 
         },
         { 
@@ -47,6 +60,19 @@ window.spacePointData.categories.push({
                         <li><strong>Speed:</strong> You both have to agree on how fast to write/read (Baud Rate).</li>
                         <li><strong>TX & RX:</strong> Your mouth (TX) talks to their ear (RX).</li>
                     </ul>
+                </div>
+
+                <!-- Interactive Lab -->
+                <div id="uart-activity-container" class="mt-8">
+                    <button onclick="Activities.renderUARTLab('uart-activity-container')" class="w-full py-4 bg-gradient-to-r from-teal-800 to-emerald-900 rounded-xl border border-teal-500/50 hover:border-teal-400 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)] transition-all group">
+                        <div class="flex flex-col items-center gap-2">
+                             <div class="p-3 rounded-full bg-black/40 group-hover:bg-teal-500/20 transition-colors">
+                                <i data-lucide="cable" class="w-8 h-8 text-teal-300 group-hover:text-white"></i>
+                             </div>
+                             <span class="font-bold text-white text-lg">Open UART Lab</span>
+                             <span class="text-teal-300 text-sm">Tap to wire the connections</span>
+                        </div>
+                    </button>
                 </div>
             ` 
         },
@@ -97,6 +123,19 @@ window.spacePointData.categories.push({
                         <li><strong>Speedy:</strong> It's like a firehose of data!</li>
                         <li><strong>4 Wires:</strong> It needs more wires than I2C, but that's why it's faster.</li>
                     </ul>
+                </div>
+
+                <!-- Interactive Lab -->
+                <div id="spi-activity-container" class="mt-8">
+                    <button onclick="Activities.renderSPILab('spi-activity-container')" class="w-full py-4 bg-gradient-to-r from-indigo-800 to-blue-900 rounded-xl border border-indigo-500/50 hover:border-indigo-400 hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] transition-all group">
+                        <div class="flex flex-col items-center gap-2">
+                             <div class="p-3 rounded-full bg-black/40 group-hover:bg-indigo-500/20 transition-colors">
+                                <i data-lucide="activity" class="w-8 h-8 text-indigo-300 group-hover:text-white"></i>
+                             </div>
+                             <span class="font-bold text-white text-lg">Open SPI Lab</span>
+                             <span class="text-indigo-300 text-sm">Tap to toggle Chip Select lines</span>
+                        </div>
+                    </button>
                 </div>
             ` 
         }

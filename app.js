@@ -77,8 +77,8 @@ const App = {
         }
 
         // Re-init icons after render
-        lucide.createIcons();
         this.updateSidebar();
+        lucide.createIcons();
     },
 
     updateSidebar() {
